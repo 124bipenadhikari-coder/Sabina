@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sorry</title>
+
+<style>
+:root{
+  --bg1:#0b1020;
+  --bg2:#121a33;
+  --card: rgba(255,255,255,0.06);
+  --border: rgba(255,255,255,0.12);
+  --text: rgba(255,255,255,0.92);
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-family:-apple-system,Segoe UI,Roboto,Arial;
+  background:
+    radial-gradient(800px 400px at 10% 10%, rgba(255,90,140,.25), transparent),
+    radial-gradient(800px 400px at 90% 30%, rgba(80,200,255,.25), transparent),
+    linear-gradient(160deg,var(--bg1),var(--bg2));
+  color:var(--text);
+}
+
+.card{
+  width:min(520px,92%);
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:28px 22px;
+  text-align:center;
+  position:relative;
+  backdrop-filter:blur(12px);
+  box-shadow:0 18px 70px rgba(0,0,0,.45);
+  transition:transform .2s;
+}
+
+/* SHAKE animation */
+@keyframes shake{
+  0%{transform:translateX(0)}
+  25%{transform:translateX(-6px)}
+  50%{transform:translateX(6px)}
+  75%{transform:translateX(-6px)}
+  100%{transform:translateX(0)}
+}
+
+.shake{
+  animation:shake .35s;
+}
+
+h1{
+  margin:0 0 10px;
+  font-size:22px;
+}
+
+p{
+  margin:0 0 20px;
+  opacity:.8;
+}
+
+.buttons{
+  position:relative;
+  height:90px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
+}
+
+button{
+  border:0;
+  border-radius:14px;
+  padding:12px 18px;
+  font-size:16px;
+  font-weight:700;
+  cursor:pointer;
+  user-select:none;
+}
+
+#yesBtn{
+  background:linear-gradient(90deg,#ff5a8c,#50c8ff);
+  color:white;
+}
+
+#noBtn{
+  position:absolute;
+  background:rgba(255,255,255,.1);
+  color:white;
+  border:1px solid rgba(255,255,255,.2);
+}
+
+/* RESULT MESSAGE */
+.result{
+  display:none;
+  margin-top:18px;
+  font-size:18px;
+  font-weight:800;
+}
+
+/* POPUP MESSAGE */
+.popup{
+  position:absolute;
+  bottom:-40px;
+  left:50%;
+  transform:translateX(-50%);
+  background:rgba(0,0,0,.7);
+  padding:8px 14px;
+  border-radius:12px;
+  font-size:13px;
+  opacity:0;
+  transition:.3s;
+}
+
+.popup.show{
+  opacity:1;
+  bottom:-55px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card" id="card">
+
+  <h1>I am sorry for everything.</h1>
+  <p>Do you forgive me?</p>
+
+  <div class="buttons" id="playground">
+    <button id="yesBtn">Yes</button>
+    <button id="noBtn">No</button>
+  </div>
+
+  <div class="result" id="result">
+    thank you sweet person😉
+  </div>
+
+  <div class="popup" id="popup">
+    No is not an option 😄
+  </div>
+
+</div>
+
+<script>
+const yesBtn = document.getElementById("yesBtn");
+const noBtn = document.getElementById("noBtn");
+const result = document.getElementById("result");
+const playground = document.getElementById("playground");
+const card = document.getElementById("card");
+const popup = document.getElementById("popup");
+
+/* YES CLICK */
+yesBtn.onclick = () => {
+  result.style.display = "block";
+  playground.style.display = "none";
+};
+
+/* DODGE FUNCTION */
+function dodge(){
+  const box = playground.getBoundingClientRect();
+  const btn = noBtn.getBoundingClientRect();
+
+  const maxX = box.width - btn.width;
+  const maxY = box.height - btn.height;
+
+  const x = Math.random() * maxX;
+  const y = Math.random() * maxY;
+
+  noBtn.style.left = x + "px";
+  noBtn.style.top = y + "px";
+
+  /* Shake card */
+  card.classList.add("shake");
+  setTimeout(()=>card.classList.remove("shake"),350);
+
+  /* Show popup */
+  popup.classList.add("show");
+  setTimeout(()=>popup.classList.remove("show"),1200);
+}
+
+/* EVENTS */
+noBtn.addEventListener("mouseenter", dodge);
+noBtn.addEventListener("touchstart", e=>{
+  e.preventDefault();
+  dodge();
+},{passive:false});
+
+noBtn.addEventListener("click", e=>{
+  e.preventDefault();
+  dodge();
+});
+
+/* Initial position */
+dodge();
+</script>
+
+</body>
+</html>
